@@ -1,14 +1,31 @@
 "use server";
 
 import { db } from "@/lib/services/db";
-import { auth } from "@/auth";
+import { createClient } from "@/lib/supabase/server";
 
-export async function syncCartAction(localItems: { productId: string; variantId: string; quantity: number }[]) {
+// Helper: get the current user's Prisma ID via Supabase session
+async function getCurrentUserId(): Promise<string | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user?.email) return null;
+
+  const prismaUser = await db.user.findUnique({
+    where: { email: user.email },
+    select: { id: true },
+  });
+
+  return prismaUser?.id ?? null;
+}
+
+export async function syncCartAction(
+  localItems: { productId: string; variantId: string; quantity: number }[]
+) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" };
-
-    const userId = session.user.id;
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, error: "Unauthorized" };
 
     for (const item of localItems) {
       await db.cartItem.upsert({
@@ -35,7 +52,7 @@ export async function syncCartAction(localItems: { productId: string; variantId:
       where: { userId },
       include: {
         product: {
-          include: { media: true }
+          include: { media: true },
         },
         variant: true,
       },
@@ -47,8 +64,12 @@ export async function syncCartAction(localItems: { productId: string; variantId:
       name: item.product.name,
       size: item.variant.size,
       color: item.variant.color,
-      image: item.product.media[0]?.url || "/assets/images/collections/men-essentials.jpg",
-      price: item.product.basePrice * (1 - item.product.discountPercent / 100),
+      image:
+        item.product.media[0]?.url ||
+        "/assets/images/collections/men-essentials.jpg",
+      price:
+        item.product.basePrice *
+        (1 - item.product.discountPercent / 100),
       quantity: item.quantity,
       slug: item.product.slug,
     }));
@@ -61,12 +82,14 @@ export async function syncCartAction(localItems: { productId: string; variantId:
   }
 }
 
-export async function addToCartAction(productId: string, variantId: string, quantity: number) {
+export async function addToCartAction(
+  productId: string,
+  variantId: string,
+  quantity: number
+) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) return { success: false, error: "Not logged in" };
-
-    const userId = session.user.id;
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, error: "Not logged in" };
 
     // Check inventory
     const variant = await db.productVariant.findUnique({
@@ -103,12 +126,13 @@ export async function addToCartAction(productId: string, variantId: string, quan
   }
 }
 
-export async function updateCartQuantityAction(variantId: string, quantity: number) {
+export async function updateCartQuantityAction(
+  variantId: string,
+  quantity: number
+) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) return { success: false, error: "Not logged in" };
-
-    const userId = session.user.id;
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, error: "Not logged in" };
 
     if (quantity <= 0) {
       await db.cartItem.delete({
@@ -141,10 +165,8 @@ export async function updateCartQuantityAction(variantId: string, quantity: numb
 
 export async function removeFromCartAction(variantId: string) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) return { success: false, error: "Not logged in" };
-
-    const userId = session.user.id;
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, error: "Not logged in" };
 
     await db.cartItem.delete({
       where: {
@@ -165,11 +187,11 @@ export async function removeFromCartAction(variantId: string) {
 
 export async function clearCartAction() {
   try {
-    const session = await auth();
-    if (!session?.user?.id) return { success: false };
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false };
 
     await db.cartItem.deleteMany({
-      where: { userId: session.user.id },
+      where: { userId },
     });
 
     return { success: true };

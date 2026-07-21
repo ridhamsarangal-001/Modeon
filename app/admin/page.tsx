@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/services/db";
 import { Container } from "@/components/ui/Container";
 import { HeadingH2 } from "@/components/ui/Typography";
@@ -35,18 +35,26 @@ interface DashboardLowStock {
  * Displays total revenue, order details, registered users, and active inventory status.
  */
 export default async function AdminDashboard() {
-  const session = await auth();
-  
-  if (!session || !session.user) {
+  const supabase = await createClient();
+  const {
+    data: { user: supabaseUser },
+  } = await supabase.auth.getUser();
+
+  if (!supabaseUser?.email) {
     redirect("/login");
   }
 
-  const role = (session.user as { role?: string }).role;
-  if (role !== "ADMIN") {
+  // Load Prisma user to check role
+  const prismaUser = await db.user.findUnique({
+    where: { email: supabaseUser.email },
+    select: { name: true, role: true },
+  });
+
+  if (prismaUser?.role !== "ADMIN") {
     redirect("/");
   }
 
-  // Fetch admin metrics from database (with try-catch safety fallbacks)
+  const adminName = prismaUser?.name || "Administrator";
   let ordersCount = 0;
   let totalRevenue = 0;
   let productsCount = 0;
@@ -95,7 +103,7 @@ export default async function AdminDashboard() {
               Store management, metrics tracking, and product dispatch control panel.
             </p>
           </div>
-          <Badge variant="bestSeller">Logged in as {session.user.name || "Administrator"}</Badge>
+          <Badge variant="bestSeller">Logged in as {adminName}</Badge>
         </div>
 
         {/* 4-Column Stat Grid */}

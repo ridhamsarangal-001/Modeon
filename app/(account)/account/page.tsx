@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { createClient } from "@/lib/supabase/server";
 import { db } from "@/lib/services/db";
 import { Container } from "@/components/ui/Container";
 import { HeadingH2 } from "@/components/ui/Typography";
@@ -32,16 +32,24 @@ interface AddressItem {
  * Lists custom addresses, active orders logs, and catalog details.
  */
 export default async function AccountPage() {
-  const session = await auth();
+  const supabase = await createClient();
+  const {
+    data: { user: supabaseUser },
+  } = await supabase.auth.getUser();
 
-  if (!session || !session.user) {
+  if (!supabaseUser?.email) {
     redirect("/login");
   }
 
-  const userId = session.user.id as string;
-  const userEmail = session.user.email as string;
-  const userName = session.user.name || "Valued Customer";
-  const userRole = (session.user as { role?: string }).role || "CUSTOMER";
+  // Fetch the user's Prisma record by email
+  const prismaUser = await db.user.findUnique({
+    where: { email: supabaseUser.email },
+  });
+
+  const userId = prismaUser?.id ?? "";
+  const userEmail = supabaseUser.email;
+  const userName = prismaUser?.name || "Valued Customer";
+  const userRole = prismaUser?.role || "CUSTOMER";
 
   let orders: OrderLogItem[] = [];
   let addresses: AddressItem[] = [];

@@ -1,14 +1,29 @@
 "use server";
 
 import { db } from "@/lib/services/db";
-import { auth } from "@/auth";
+import { createClient } from "@/lib/supabase/server";
+
+// Helper: get current user's Prisma ID via Supabase session
+async function getCurrentUserId(): Promise<string | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user?.email) return null;
+
+  const prismaUser = await db.user.findUnique({
+    where: { email: user.email },
+    select: { id: true },
+  });
+
+  return prismaUser?.id ?? null;
+}
 
 export async function syncWishlistAction(localProductIds: string[]) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) return { success: false, error: "Unauthorized" };
-
-    const userId = session.user.id;
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, error: "Unauthorized" };
 
     for (const pId of localProductIds) {
       await db.wishlistItem.upsert({
@@ -30,14 +45,14 @@ export async function syncWishlistAction(localProductIds: string[]) {
       where: { userId },
       include: {
         product: {
-          include: { media: true }
-        }
-      }
+          include: { media: true },
+        },
+      },
     });
 
-    return { 
-      success: true, 
-      productIds: items.map(item => item.productId) 
+    return {
+      success: true,
+      productIds: items.map((item) => item.productId),
     };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Sync failed";
@@ -48,10 +63,8 @@ export async function syncWishlistAction(localProductIds: string[]) {
 
 export async function toggleWishlistAction(productId: string) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) return { success: false, error: "Not logged in" };
-
-    const userId = session.user.id;
+    const userId = await getCurrentUserId();
+    if (!userId) return { success: false, error: "Not logged in" };
 
     const existing = await db.wishlistItem.findUnique({
       where: {
