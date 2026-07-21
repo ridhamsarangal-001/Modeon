@@ -4,8 +4,6 @@ import { FeaturedCampaign } from "@/components/homepage/FeaturedCampaign";
 import { EditorialSections } from "@/components/homepage/EditorialSections";
 import { VideoSection } from "@/components/homepage/VideoSection";
 
-export const dynamic = "force-dynamic";
-
 /**
  * Homepage Router Entry point.
  * Composes exactly the premium layouts requested:

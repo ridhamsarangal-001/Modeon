@@ -4,8 +4,14 @@ import { Breadcrumbs } from "@/components/product/Breadcrumbs";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { ProductInfo } from "@/components/product/ProductInfo";
 
-export const dynamic = "force-dynamic";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
+
+export async function generateStaticParams() {
+  const products = await ProductService.getProducts();
+  return products.map((p) => ({
+    slug: p.slug
+  }));
+}
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 

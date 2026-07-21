@@ -34,7 +34,15 @@ export function MobileNav({ isTransparentHeader: _isTransparentHeader }: { isTra
   const previousActiveElement = React.useRef<HTMLElement | null>(null);
 
   // Toggle drawer open state
-  const toggleDrawer = () => setIsOpen((prev) => !prev);
+  const toggleDrawer = () => {
+    setIsOpen((prev) => {
+      const next = !prev;
+      if (next) {
+        setShouldRender(true);
+      }
+      return next;
+    });
+  };
   const closeDrawer = () => setIsOpen(false);
 
   // Handle body scroll lock & focus restoration

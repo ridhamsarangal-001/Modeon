@@ -4,7 +4,15 @@ import { Breadcrumbs } from "@/components/product/Breadcrumbs";
 import { ProductList } from "@/components/product/ProductList";
 import { Product } from "@/types/product";
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  return [
+    { slug: "men" },
+    { slug: "women" },
+    { slug: "accessories" },
+    { slug: "the-edit" },
+    { slug: "new-arrivals" }
+  ];
+}
 
 interface CollectionPageProps {
   params: Promise<{
