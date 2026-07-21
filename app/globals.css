@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  /* Dynamic CSS variable mappings */
+  --color-primary: var(--primary);
+  --color-background: var(--background);
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-error: var(--error);
+  --color-success: var(--success);
+
+  /* Fonts */
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+
+  /* Fluid Type Scale (clamp between 320px and 1440px viewport bounds) */
+  --text-display: clamp(3rem, 5vw + 1.5rem, 4.5rem);        /* 48px -> 72px */
+  --text-h1: clamp(1.75rem, 2.5vw + 1rem, 2.5rem);          /* 28px -> 40px */
+  --text-h2: clamp(1.5rem, 1.8vw + 0.8rem, 2rem);           /* 24px -> 32px */
+  --text-h3: clamp(1.25rem, 1.2vw + 0.6rem, 1.5rem);        /* 20px -> 24px */
+  --text-body-lg: clamp(1rem, 0.5vw + 0.8rem, 1.125rem);    /* 16px -> 18px */
+  --text-body: clamp(0.9375rem, 0.2vw + 0.85rem, 1rem);     /* 15px -> 16px */
+  --text-small: clamp(0.8125rem, 0.1vw + 0.8rem, 0.875rem); /* 13px -> 14px */
+  --text-micro: 0.75rem;                                    /* 12px constant */
+
+  /* Border Radii */
+  --radius-base: 8px;
+  --radius-hero: 12px;
+
+  /* Shadows */
+  --shadow-soft: 0 4px 16px rgba(17, 17, 17, 0.06);
+  --shadow-modal: 0 8px 32px rgba(17, 17, 17, 0.10);
+
+  /* Fluid Spacing System (clamp between 320px and 1440px viewport bounds) */
+  --spacing-space-1: 4px;
+  --spacing-space-2: 8px;
+  --spacing-space-3: clamp(12px, 1.2vw + 8px, 16px);
+  --spacing-space-4: clamp(16px, 1.8vw + 12px, 24px);
+  --spacing-space-5: clamp(20px, 2.5vw + 16px, 32px);
+  --spacing-space-6: clamp(28px, 3.5vw + 24px, 48px);
+  --spacing-space-7: clamp(36px, 4.5vw + 32px, 64px);
+  --spacing-space-8: clamp(48px, 6.5vw + 48px, 96px);
+
+  /* Easing curves (from Animation.md) */
+  --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Custom marquee animation */
+  --animate-marquee: marquee 25s linear infinite;
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Custom sinusoidal floating animation (from Animation.md) */
+  --animate-float: float 4.5s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(-6px);
+    }
+    50% {
+      transform: translateY(6px);
+    }
+  }
+}
+
+:root {
+  --primary: #111111;
+  --background: #F8F7F5;
+  --accent: #C9A96E;
+  --surface: #FFFFFF;
+  --border: #E5E2DD;
+  --muted: #6B6862;
+  --error: #B3261E;
+  --success: #3C6E47;
+}
+
+/* Dark mode theme adjustments (Design.md Section 17) */
+.dark, :root[class~="dark"] {
+  --primary: #F8F7F5;
+  --background: #121212;
+  --surface: #1C1C1C;
+  --accent: #D4B483;
+  --border: #2E2E2E;
+  --muted: #A3A099;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  transition: background-color 300ms var(--ease-out-quart), color 300ms var(--ease-out-quart);
+}
