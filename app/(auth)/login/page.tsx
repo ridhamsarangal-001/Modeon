@@ -191,7 +191,7 @@ function LoginContent() {
           </HeadingH2>
           <p className="font-sans text-small text-neutral-700 dark:text-neutral-300 mt-1">
             {step === "verify" && authMethod === "otp" 
-              ? "Verify using the sign-in link sent to your inbox." 
+              ? "Verify single-use code sent to your inbox." 
               : "Access your order log and address portfolio."}
           </p>
         </div>
@@ -217,7 +217,7 @@ function LoginContent() {
                   : "border-transparent text-neutral-400 dark:text-neutral-600 hover:text-neutral-900 dark:hover:text-white"
               }`}
             >
-              Continue with Email Link
+              Continue with Email OTP
             </button>
           </div>
         )}
@@ -225,7 +225,7 @@ function LoginContent() {
         {/* Error Alert Box */}
         {(error || (step === "verify" && expiration === 0)) && (
           <div className="bg-error/10 border border-error/20 p-space-3 text-small text-error font-sans font-medium text-center">
-            {error || "Sign-in link has expired. Please request a new link."}
+            {error || "Verification code has expired. Please request a new code."}
           </div>
         )}
 
@@ -298,7 +298,7 @@ function LoginContent() {
                   loading={loading}
                   className="w-full mt-space-2 rounded-none uppercase tracking-wider text-small bg-primary text-background hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
                 >
-                  Send Sign-in Link
+                  Send Verification Code
                 </Button>
               </form>
             ) : (
@@ -307,7 +307,7 @@ function LoginContent() {
                 <div className="flex flex-col gap-space-3">
                   <div className="flex justify-between items-center">
                     <Label className="font-sans text-micro tracking-widest uppercase text-neutral-700 dark:text-neutral-300">
-                      Check email for the sign-in link
+                      Enter Verification Code
                     </Label>
                     <span className="font-mono text-small text-accent font-semibold">
                       {formatTime(expiration)}
@@ -360,7 +360,7 @@ function LoginContent() {
                           : "text-neutral-900 dark:text-white hover:underline"
                       }`}
                     >
-                      {cooldown > 0 ? `Resend Link in ${cooldown}s` : "Resend Link"}
+                      {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend Code"}
                     </button>
                   </div>
                 </div>

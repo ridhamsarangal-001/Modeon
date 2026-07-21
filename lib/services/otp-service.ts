@@ -1,16 +1,15 @@
-// import { db } from "./db";
+import { db } from "./db";
 import crypto from "crypto";
-// import { Resend } from "resend";
-// import fs from "fs";
-// import path from "path";
-import { createClient } from "@/lib/supabase/server";
+import { Resend } from "resend";
+import fs from "fs";
+import path from "path";
 
 // Initialize Resend
 // Note: If no RESEND_API_KEY is found, we fall back to a mock handler so development is never blocked.
-// const resendApiKey = process.env.RESEND_API_KEY || "re_mock";
-// const resend = resendApiKey !== "re_mock" && !resendApiKey.includes("your_") 
-//   ? new Resend(resendApiKey) 
-//   : null;
+const resendApiKey = process.env.RESEND_API_KEY || "re_mock";
+const resend = resendApiKey !== "re_mock" && !resendApiKey.includes("your_") 
+  ? new Resend(resendApiKey) 
+  : null;
 
 /**
  * Hash an OTP string using SHA-256.
@@ -33,52 +32,6 @@ export function compareOtpHashes(hashA: string, hashB: string): boolean {
  * Creates, stores, and dispatches a 6-digit verification OTP.
  * Enforces a 60-second rate limiting cooldown on resend attempts.
  */
-export async function sendOtp(email: string): Promise<{ success: boolean; error?: string }> {
-  try {
-    console.log(`[Supabase Auth] Env URL: "${process.env.NEXT_PUBLIC_SUPABASE_URL}"`);
-    console.log(`[Supabase Auth] Env Key exists: ${!!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`);
-    console.log(`[Supabase Auth] Dispatching OTP email via signInWithOtp to ${email}...`);
-    
-    const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        shouldCreateUser: true,
-      },
-    });
-
-    if (error) {
-      console.error("[Supabase Auth] signInWithOtp error details:");
-      console.error("Message:", error.message);
-      console.error("Name:", error.name);
-      console.error("Status:", error.status);
-      console.error("Stack:", error.stack);
-      console.error("Full Error:", JSON.stringify(error, null, 2));
-      if ("cause" in error) {
-        console.error("Underlying Cause:", error.cause);
-      }
-      return { success: false, error: error.message };
-    }
-
-    console.log(`[Supabase Auth] OTP successfully dispatched to ${email}`);
-    return { success: true };
-  } catch (err: unknown) {
-    console.error("[Supabase OTP Service Error] Exception caught:");
-    if (err instanceof Error) {
-      console.error("Message:", err.message);
-      console.error("Stack:", err.stack);
-      console.error("Cause:", err.cause);
-    } else {
-      console.error(err);
-    }
-    return { success: false, error: "Failed to dispatch verification code via Supabase." };
-  }
-}
-
-/*
-// ========================================================
-// ORIGINAL RESEND OTP FLOW (ROLLBACK BACKUP)
-// ========================================================
 export async function sendOtp(email: string): Promise<{ success: boolean; error?: string }> {
   try {
     const now = new Date();
@@ -192,22 +145,22 @@ export async function sendOtp(email: string): Promise<{ success: boolean; error?
             <p style="font-size: 14px; line-height: 1.6; color: #111111;">
               Please use the following single-use verification code to complete your authentication.
             </p>
-            <div class="otp-box">\${otp}</div>
+            <div class="otp-box">${otp}</div>
             <p class="expiry-text">
               This code is valid for <strong>5 minutes</strong>.<br />
               If you did not request this verification, please disregard this email.
             </p>
             <div class="footer">
-              &copy; \${new Date().getFullYear()} MODEON. Quietly made. All rights reserved.
+              &copy; ${new Date().getFullYear()} MODEON. Quietly made. All rights reserved.
             </div>
           </div>
         </body>
       </html>
-    \`;
+    `;
 
     // 5. Send code
     if (resend) {
-      console.log(\`[OTP] Sending real email via Resend to \${email}...\`);
+      console.log(`[OTP] Sending real email via Resend to ${email}...`);
       const fromEmail = process.env.RESEND_FROM_EMAIL || "Modeon Auth <onboarding@resend.dev>";
       await resend.emails.send({
         from: fromEmail,
@@ -215,20 +168,20 @@ export async function sendOtp(email: string): Promise<{ success: boolean; error?
         subject: "Your Modeon verification code",
         html: htmlEmailContent,
       });
-      console.log(\`[OTP] Email successfully dispatched to \${email} (OTP code is hidden for security).\`);
+      console.log(`[OTP] Email successfully dispatched to ${email} (OTP code is hidden for security).`);
     } else {
       // Offline/Mock Fallback Mode: Log code in console and write to temporary file
-      console.log(\`\\n==============================================\`);
-      console.log(\`[OTP MOCK DELIVERY] to: \${email}\`);
-      console.log(\`Verification Code: \${otp}\`);
-      console.log(\`==============================================\\n\`);
+      console.log(`\n==============================================`);
+      console.log(`[OTP MOCK DELIVERY] to: ${email}`);
+      console.log(`Verification Code: ${otp}`);
+      console.log(`==============================================\n`);
 
       // Write to scratch directory
       const scratchDir = path.join(process.cwd(), ".gemini", "scratch");
       if (!fs.existsSync(scratchDir)) {
         fs.mkdirSync(scratchDir, { recursive: true });
       }
-      fs.writeFileSync(path.join(scratchDir, "OTP_LOG.txt"), \`Email: \${email} | Code: \${otp} | Sent: \${new Date().toISOString()}\\n\`, { flag: "a" });
+      fs.writeFileSync(path.join(scratchDir, "OTP_LOG.txt"), `Email: ${email} | Code: ${otp} | Sent: ${new Date().toISOString()}\n`, { flag: "a" });
     }
 
     return { success: true };
@@ -237,4 +190,3 @@ export async function sendOtp(email: string): Promise<{ success: boolean; error?
     return { success: false, error: "Failed to dispatch verification code." };
   }
 }
-*/

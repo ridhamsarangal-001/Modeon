@@ -85,6 +85,13 @@ export function Footer() {
           {BRAND_CONFIG.tagline}
         </TextSmall>
       </Container>
+
+      {/* Developer credit */}
+      <Container className="flex justify-center mt-space-3">
+        <TextSmall className="text-muted/50 text-center tracking-wider text-[11px] font-sans">
+          Designed & Developed with ❤️ by <span className="text-primary/80 font-medium">Shery Sarangal</span>
+        </TextSmall>
+      </Container>
     </footer>
   );
 }

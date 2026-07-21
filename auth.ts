@@ -4,9 +4,8 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/services/db";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { createClient } from "@/lib/supabase/server";
 
-// import { compareOtpHashes, hashOtp } from "@/lib/services/otp-service";
+import { compareOtpHashes, hashOtp } from "@/lib/services/otp-service";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -37,57 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const { email, password, otp, isOtpLogin } = parsed.data;
 
-        // 1. OTP Verification Flow (Supabase Auth Migration)
-        if (isOtpLogin === "true") {
-          if (!otp) {
-            console.warn("[Auth.js] OTP token was not provided in OTP login credentials.");
-            return null;
-          }
-
-          console.log("[Auth.js] verifying OTP with Supabase for:", email);
-          const supabase = await createClient();
-          const { error } = await supabase.auth.verifyOtp({
-            email,
-            token: otp,
-            type: "email",
-          });
-
-          if (error) {
-            console.warn("[Auth.js] Supabase OTP verification failed:", error.message);
-            return null;
-          }
-
-          console.log("[Auth.js] Supabase OTP verified. Fetching/provisioning user in local DB...");
-
-          // Fetch or provision user
-          let user = await db.user.findUnique({
-            where: { email }
-          });
-
-          if (!user) {
-            console.log("[Auth.js] provisioning new user account for:", email);
-            user = await db.user.create({
-              data: {
-                email,
-                name: email.split("@")[0],
-                role: "CUSTOMER"
-              }
-            });
-          }
-
-          console.log("[Auth.js] OTP user authenticated successfully:", email);
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-          } as unknown as { id: string; name: string | null; email: string; role: string };
-        }
-
-        /*
-        // ==========================================
-        // ORIGINAL RESEND OTP DB FLOW (ROLLBACK BACKUP)
-        // ==========================================
+        // 1. OTP Verification Flow
         if (isOtpLogin === "true") {
           if (!otp) {
             console.warn("[Auth.js] OTP token was not provided in OTP login credentials.");
@@ -147,7 +96,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             role: user.role,
           } as unknown as { id: string; name: string | null; email: string; role: string };
         }
-        */
 
         // 2. Standard Password Login Flow
         if (!password) {
