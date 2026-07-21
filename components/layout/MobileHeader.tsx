@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils/cn";
  * - Restores solid luxury background on scroll down or on child page routes.
  * - iPhone notch safe-area offset built-in natively.
  */
-export function MobileHeader({ scrollDir: _scrollDir }: { scrollDir?: string }) {
+export function MobileHeader({ scrollDir: _scrollDir, onOpenSearch }: { scrollDir?: string; onOpenSearch?: () => void }) {
   // const pathname = usePathname();
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
@@ -73,6 +73,7 @@ export function MobileHeader({ scrollDir: _scrollDir }: { scrollDir?: string }) 
           >
             {/* Search */}
             <button
+              onClick={onOpenSearch}
               aria-label="Open search search overlay"
               className="p-1 hover:opacity-75 transition-opacity focus-visible:outline-hidden cursor-pointer"
             >

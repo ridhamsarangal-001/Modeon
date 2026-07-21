@@ -13,7 +13,7 @@ import { useHydratedStore } from "@/store/useHydratedStore";
  * DesktopHeader - Pixel-perfect header specifically isolated for desktop viewports.
  * EXACTLY matches the legacy brand layout, sizing, backgrounds, and margins.
  */
-export function DesktopHeader() {
+export function DesktopHeader({ onOpenSearch }: { onOpenSearch?: () => void }) {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [isCartOpen, setIsCartOpen] = React.useState(false);
@@ -55,6 +55,7 @@ export function DesktopHeader() {
           <div className="flex items-center gap-space-2 md:gap-space-3 text-[#1a1a1a] dark:text-[#F8F7F5] transition-colors">
             {/* Search Icon */}
             <button
+              onClick={onOpenSearch}
               aria-label="Open search search overlay"
               className="p-space-2 hover:text-[#333] dark:hover:text-neutral-300 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#1a1a1a] dark:focus-visible:ring-[#F8F7F5] rounded-base cursor-pointer"
             >
