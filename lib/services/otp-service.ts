@@ -7,9 +7,14 @@ import path from "path";
 // Initialize Resend
 // Note: If no RESEND_API_KEY is found, we fall back to a mock handler so development is never blocked.
 const resendApiKey = process.env.RESEND_API_KEY || "re_mock";
-const resend = resendApiKey !== "re_mock" && !resendApiKey.includes("your_") 
-  ? new Resend(resendApiKey) 
+const resend = resendApiKey !== "re_mock" && !resendApiKey.includes("your_")
+  ? new Resend(resendApiKey)
   : null;
+
+// Startup diagnostic — printed once when the module is first imported
+console.log("[OTP Service] RESEND_API_KEY loaded:", resendApiKey !== "re_mock" ? `${resendApiKey.slice(0, 8)}...` : "NOT SET (mock mode)");
+console.log("[OTP Service] RESEND_FROM_EMAIL:", process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev (default)");
+console.log("[OTP Service] Resend client initialised:", resend !== null);
 
 /**
  * Hash an OTP string using SHA-256.
@@ -160,15 +165,23 @@ export async function sendOtp(email: string): Promise<{ success: boolean; error?
 
     // 5. Send code
     if (resend) {
-      console.log(`[OTP] Sending real email via Resend to ${email}...`);
       const fromEmail = process.env.RESEND_FROM_EMAIL || "Modeon Auth <onboarding@resend.dev>";
-      await resend.emails.send({
+      console.log(`[OTP] Calling Resend API — from: "${fromEmail}" to: "${email}"`);
+
+      const { data, error: resendError } = await resend.emails.send({
         from: fromEmail,
         to: email,
         subject: "Your Modeon verification code",
         html: htmlEmailContent,
       });
-      console.log(`[OTP] Email successfully dispatched to ${email} (OTP code is hidden for security).`);
+
+      if (resendError) {
+        // Log the full Resend error object so nothing is hidden
+        console.error("[OTP] Resend API returned an error:", JSON.stringify(resendError, null, 2));
+        throw new Error(`Resend API error: ${resendError.message ?? JSON.stringify(resendError)}`);
+      }
+
+      console.log(`[OTP] Email successfully dispatched. Resend message id: ${data?.id ?? "(no id returned)"}`);
     } else {
       // Offline/Mock Fallback Mode: Log code in console and write to temporary file
       console.log(`\n==============================================`);
