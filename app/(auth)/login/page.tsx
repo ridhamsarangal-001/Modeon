@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { HeadingH2 } from "@/components/ui/Typography";
 import { PremiumLoader } from "@/components/ui/PremiumLoader";
+import { BackButton } from "@/components/ui/BackButton";
 
 // ─── Google Icon ──────────────────────────────────────────────────────────────
 function GoogleIcon() {
@@ -132,6 +133,11 @@ function LoginContent() {
   return (
     <div className="min-h-screen bg-[#F5F3EF] dark:bg-[#121212] flex items-center justify-center py-space-8 px-space-4 transition-colors duration-300">
       <div className="w-full max-w-[440px] bg-white dark:bg-[#1C1C1C] border border-border/40 dark:border-neutral-800 p-space-6 md:p-space-8 shadow-soft flex flex-col gap-space-6 rounded-none">
+
+        {/* Back */}
+        <div className="flex items-start">
+          <BackButton mobileLabel="Back" desktopLabel="Back" />
+        </div>
 
         {/* Header */}
         <div className="flex flex-col gap-1 text-center">
