@@ -16,14 +16,11 @@ export function MobileNav({ isTransparentHeader: _isTransparentHeader }: { isTra
   const [isOpen, setIsOpen] = React.useState(false);
   const pathname = usePathname();
   
-  const [shouldRender, setShouldRender] = React.useState(false);
+  const [shouldRender, setShouldRender] = React.useState(isOpen);
 
   React.useEffect(() => {
     if (isOpen) {
-      const timer = setTimeout(() => {
-        setShouldRender(true);
-      }, 0);
-      return () => clearTimeout(timer);
+      setShouldRender(true);
     } else {
       const timer = setTimeout(() => {
         setShouldRender(false);
@@ -138,7 +135,7 @@ export function MobileNav({ isTransparentHeader: _isTransparentHeader }: { isTra
           aria-controls="mobile-nav-drawer"
           aria-label="Toggle navigation menu"
           className={cn(
-            "p-space-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent rounded-base relative z-50 select-none cursor-pointer",
+            "p-space-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent rounded-base relative z-50 select-none cursor-pointer touch-manipulation",
             "text-white"
           )}
         >
@@ -201,9 +198,10 @@ export function MobileNav({ isTransparentHeader: _isTransparentHeader }: { isTra
                   <Link
                     key={link.path}
                     href={link.path}
+                    onClick={closeDrawer}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "font-sans text-body-lg text-neutral-400 hover:text-[#F8F7F5] transition-colors py-1 select-none text-left",
+                      "font-sans text-body-lg text-neutral-400 hover:text-[#F8F7F5] transition-colors py-1 select-none text-left touch-manipulation",
                       isActive && "text-[#F8F7F5] font-medium"
                     )}
                   >
@@ -220,13 +218,13 @@ export function MobileNav({ isTransparentHeader: _isTransparentHeader }: { isTra
               Account & Lists
             </HeadingH3>
             <div className="flex flex-col gap-6">
-              <Link href="/wishlist" className="font-sans text-body text-neutral-400 hover:text-[#F8F7F5] text-left">
+              <Link href="/wishlist" onClick={closeDrawer} className="font-sans text-body text-neutral-400 hover:text-[#F8F7F5] text-left touch-manipulation">
                 Wishlist
               </Link>
-              <Link href="/selection" className="font-sans text-body text-neutral-400 hover:text-[#F8F7F5] text-left">
+              <Link href="/selection" onClick={closeDrawer} className="font-sans text-body text-neutral-400 hover:text-[#F8F7F5] text-left touch-manipulation">
                 Selection (Cart)
               </Link>
-              <Link href="/account" className="font-sans text-body text-neutral-400 hover:text-[#F8F7F5] text-left">
+              <Link href="/account" onClick={closeDrawer} className="font-sans text-body text-neutral-400 hover:text-[#F8F7F5] text-left touch-manipulation">
                 Account Settings
               </Link>
             </div>
@@ -237,7 +235,8 @@ export function MobileNav({ isTransparentHeader: _isTransparentHeader }: { isTra
         <div className="p-6 shrink-0 border-t border-neutral-800/40 bg-[#121212] pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
           <Link
             href="/collections/new-arrivals"
-            className="w-full bg-[#F8F7F5] text-black py-4 text-center font-sans font-semibold text-small uppercase tracking-widest block hover:bg-neutral-200 transition-colors"
+            onClick={closeDrawer}
+            className="w-full bg-[#F8F7F5] text-black py-4 text-center font-sans font-semibold text-small uppercase tracking-widest block hover:bg-neutral-200 transition-colors touch-manipulation"
           >
             Shop New Arrivals
           </Link>

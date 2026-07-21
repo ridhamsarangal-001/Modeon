@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Breadcrumbs } from "@/components/product/Breadcrumbs";
+import { Container } from "@/components/ui/Container";
 
 const JOURNAL_POSTS = [
   {
@@ -40,128 +41,126 @@ const JOURNAL_POSTS = [
 ];
 
 export default function EditorialPage() {
-  const breadcrumbs = [{ label: "Editorial" }];
+  const breadcrumbs = [{ label: "Journal" }];
+  const featuredPost = JOURNAL_POSTS[0];
+  const remainingPosts = JOURNAL_POSTS.slice(1);
 
   return (
-    <div className="bg-[#F5F3EF] min-h-screen text-black select-none">
+    <div className="bg-[#F5F3EF] [.dark_&]:bg-[#121212] min-h-screen text-primary select-none transition-colors duration-300">
       {/* Breadcrumbs link path */}
-      <div className="border-b border-neutral-200/50 py-1">
+      <div className="border-b border-border/40 py-1">
         <Breadcrumbs items={breadcrumbs} />
       </div>
 
-      {/* Top Editorial Visual Banner (uses hero-main.jpg) */}
-      <div className="w-full relative h-[40vh] md:h-[50vh] bg-neutral-200 overflow-hidden">
-        <Image
-          src="/assets/hero/hero-main.jpg"
-          alt="Editorial Lookbook Header visual"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-          unoptimized
-        />
-        <div className="absolute inset-0 bg-black/10 flex flex-col justify-end p-space-4 md:p-space-6 lg:p-space-8 text-white">
-          <span className="font-sans text-micro tracking-[0.25em] uppercase text-neutral-300 font-semibold mb-1">
-            ATELIER READINGS
+      <Container className="py-space-5 md:py-space-6 flex flex-col">
+        {/* Minimal Editorial Header */}
+        <div className="flex flex-col items-center text-center mt-space-3 md:mt-space-4 mb-space-5 md:mb-space-6">
+          <span className="font-sans text-micro tracking-[0.25em] uppercase text-muted font-semibold mb-2 md:mb-3">
+            Atelier Readings
           </span>
-          <h2 className="font-display text-[32px] md:text-[44px] lg:text-[56px] font-normal leading-none text-white tracking-tight">
+          <h1 className="font-display text-[36px] md:text-[54px] lg:text-[72px] tracking-tight font-light text-primary uppercase leading-none">
             Modeon Journal
-          </h2>
-        </div>
-      </div>
-
-      <div className="max-w-[1440px] mx-auto px-space-4 md:px-space-5 lg:px-space-6 py-space-6 md:py-space-8 flex flex-col gap-space-8 md:gap-space-10">
-        
-        {/* Page Banner Header */}
-        <div className="flex flex-col items-start gap-space-2 max-w-lg mt-space-2">
-          <span className="font-sans text-micro tracking-widest uppercase text-neutral-500 font-semibold">
-            Essays & Studies
-          </span>
-          <p className="font-sans text-body text-neutral-600 leading-relaxed">
-            A repository of seasonal lookbooks, reflections on organic fabric sourcing, and our core philosophy of quiet luxury.
+          </h1>
+          <p className="font-sans text-body-lg md:text-h3 text-muted max-w-[650px] font-light leading-relaxed tracking-wide mt-space-3">
+            A curated archive of seasonal reflections, material studies, and design philosophies from our creative atelier.
           </p>
         </div>
 
-        {/* Alternate Editorial Row Blocks */}
-        <div className="flex flex-col gap-space-8 md:gap-space-10">
-          {JOURNAL_POSTS.map((post, index) => {
-            const isEven = index % 2 === 0;
-            return (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-space-6 lg:gap-space-8 items-center"
-              >
-                {/* Image Block */}
-                <div className={`lg:col-span-7 relative aspect-4/5 md:aspect-3/2 lg:aspect-4/3 overflow-hidden bg-neutral-100 ${isEven ? "lg:order-1" : "lg:order-2"}`}>
-                  <Image
-                    src={post.image}
-                    alt={post.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 55vw"
-                    className="object-cover object-center hover:scale-102 transition-transform duration-700 ease-out-quart"
-                    unoptimized
-                  />
-                </div>
+        {/* Thin Divider */}
+        <div className="w-full border-b border-border/80 mb-space-6 md:mb-space-7" />
 
-                {/* Text Block */}
-                <div className={`lg:col-span-5 flex flex-col items-start gap-space-3 ${isEven ? "lg:order-2 lg:pl-space-5" : "lg:order-1 lg:pr-space-5"}`}>
-                  <span className="font-sans text-micro tracking-widest uppercase text-neutral-500 font-semibold">
-                    {post.category}
+        {/* Featured Article (Top) */}
+        {featuredPost && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-space-5 lg:gap-space-6 items-center mb-space-7 md:mb-space-8"
+          >
+            {/* Image Block */}
+            <div className="lg:col-span-7 relative aspect-4/5 md:aspect-[3/2] lg:aspect-[1.5/1] overflow-hidden bg-neutral-100 [.dark_&]:bg-neutral-900">
+              <Image
+                src={featuredPost.image}
+                alt={featuredPost.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 60vw"
+                className="object-cover object-top hover:scale-[1.015] transition-transform duration-700 ease-out-quart"
+                unoptimized
+              />
+            </div>
+
+            {/* Text Block */}
+            <div className="lg:col-span-5 flex flex-col items-start gap-space-3 lg:pl-space-5">
+              <span className="font-sans text-micro tracking-widest uppercase text-muted font-semibold">
+                {featuredPost.category}
+              </span>
+              <h2 className="font-display text-h1 md:text-[36px] lg:text-[44px] leading-tight font-light text-primary">
+                {featuredPost.title}
+              </h2>
+              <span className="font-sans text-micro text-muted">
+                {featuredPost.date}
+              </span>
+              <p className="font-sans text-body-lg leading-relaxed text-muted mt-space-1">
+                {featuredPost.excerpt}
+              </p>
+              <div className="mt-space-2">
+                <span className="inline-flex items-center text-small font-semibold tracking-wider uppercase border-b border-primary hover:text-accent hover:border-accent hover:border-b-accent pb-0.5 cursor-pointer transition-colors duration-300">
+                  Read Essay
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Clean Magazine-Style Responsive Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-space-5 gap-y-space-6 md:gap-y-space-7">
+          {remainingPosts.map((post, index) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+              className="flex flex-col gap-space-3"
+            >
+              {/* Image Block */}
+              <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100 [.dark_&]:bg-neutral-900">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover object-center hover:scale-[1.015] transition-transform duration-700 ease-out-quart"
+                  unoptimized
+                />
+              </div>
+
+              {/* Text Block */}
+              <div className="flex flex-col items-start gap-space-2 mt-space-1">
+                <span className="font-sans text-micro tracking-widest uppercase text-muted font-semibold">
+                  {post.category}
+                </span>
+                <h3 className="font-display text-h2 md:text-h3 leading-snug font-normal text-primary hover:text-accent transition-colors duration-300 cursor-pointer">
+                  {post.title}
+                </h3>
+                <span className="font-sans text-micro text-muted">
+                  {post.date}
+                </span>
+                <p className="font-sans text-body leading-relaxed text-muted line-clamp-3">
+                  {post.excerpt}
+                </p>
+                <div className="mt-space-2">
+                  <span className="inline-flex items-center text-small font-semibold tracking-wider uppercase border-b border-primary hover:text-accent hover:border-accent hover:border-b-accent pb-0.5 cursor-pointer transition-colors duration-300">
+                    Read Essay
                   </span>
-                  <h2 className="font-display text-h1 md:text-[32px] leading-tight font-normal text-neutral-900">
-                    {post.title}
-                  </h2>
-                  <span className="font-sans text-micro text-neutral-400">
-                    {post.date}
-                  </span>
-                  <p className="font-sans text-body leading-relaxed text-neutral-600 mt-space-1">
-                    {post.excerpt}
-                  </p>
-                  <div className="mt-space-2">
-                    <span className="inline-flex items-center text-small font-semibold tracking-wider uppercase border-b border-black pb-0.5 cursor-pointer hover:text-neutral-600 hover:border-neutral-600 transition-colors">
-                      Read Essay
-                    </span>
-                  </div>
                 </div>
-              </motion.div>
-            );
-          })}
+              </div>
+            </motion.div>
+          ))}
         </div>
-
-        {/* Footer Campaign visual banner (uses hero-3.jpg) */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="w-full relative aspect-16/9 md:aspect-21/9 lg:aspect-[3/1] bg-neutral-200 overflow-hidden flex flex-col justify-end p-space-4 md:p-space-6 lg:p-space-8 text-white mt-space-4"
-        >
-          <Image
-            src="/assets/hero/hero-3.jpg"
-            alt="Autumn Campaign visual"
-            fill
-            sizes="100vw"
-            className="object-cover object-center brightness-95"
-            unoptimized
-          />
-          <div className="relative z-10 flex flex-col items-start gap-space-1 max-w-md">
-            <span className="font-sans text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-300">
-              Seasonal Preview
-            </span>
-            <h3 className="font-display text-h1 font-normal leading-tight text-white">
-              The Essential Edit
-            </h3>
-            <p className="font-sans text-small text-neutral-200 leading-relaxed">
-              Quiet confidence, structural purity, and fabrics woven to breathe.
-            </p>
-          </div>
-        </motion.div>
-
-      </div>
+      </Container>
     </div>
   );
 }

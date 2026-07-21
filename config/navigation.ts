@@ -32,14 +32,6 @@ export const NAV_LINKS = {
         { label: "Sustainability", path: "/sustainability" },
         { label: "Journal", path: "/journal" }
       ]
-    },
-    {
-      title: "Support",
-      links: [
-        { label: "Concierge", path: "/contact" },
-        { label: "Shipping & Returns", path: "/shipping-returns" },
-        { label: "Care Guide", path: "/care-guide" }
-      ]
     }
   ]
 } as const;

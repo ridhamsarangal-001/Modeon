@@ -20,9 +20,9 @@ export function Footer() {
 
   return (
     <footer className="w-full bg-surface dark:bg-surface-dark border-t border-border dark:border-border-dark pt-space-6 pb-space-5 select-none">
-      <Container className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-5">
+      <Container className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-5">
         
-        {/* Columns: Shop, Company, Support (Directly mapped from NAV_LINKS) */}
+        {/* Columns: Shop, Company (Directly mapped from NAV_LINKS) */}
         {NAV_LINKS.footer.map((column) => (
           <div key={column.title} className="flex flex-col gap-space-3">
             <HeadingH3 className="font-semibold text-primary text-small uppercase tracking-wider">
@@ -30,7 +30,7 @@ export function Footer() {
             </HeadingH3>
             <ul className="flex flex-col gap-space-2" aria-label={`${column.title} links`}>
               {column.links.map((link) => (
-                <li key={link.path}>
+                <li key={link.label}>
                   <Link
                     href={link.path}
                     className="font-sans text-small text-muted hover:text-primary transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent rounded-xs"

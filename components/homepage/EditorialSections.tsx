@@ -22,7 +22,7 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
   return (
     <div ref={containerRef} className="w-full h-full relative overflow-hidden bg-neutral-100 dark:bg-neutral-900">
       <motion.div
-        style={{ y, height: "110%", top: "-5%" }}
+        style={{ y, height: "110%", top: "-5%", willChange: "transform" }}
         className="absolute inset-0 w-full"
       >
         <Image
@@ -79,14 +79,16 @@ export function EditorialSections() {
   };
 
   return (
-    <section className="w-full bg-[#F5F3EF] dark:bg-[#121212] relative py-space-8 select-none flex flex-col gap-space-8 md:gap-space-10 overflow-hidden transition-colors duration-300">
+    <section 
+      className="w-full bg-[#F5F3EF] dark:bg-[#121212] relative py-space-8 select-none flex flex-col gap-space-8 md:gap-space-10 overflow-hidden transition-colors duration-300"
+      style={{ clipPath: "inset(0)" }}
+    >
       
       {/* Fixed Parallax Mountain Background Layer (Light mode: 80% opacity, Dark mode: 15% opacity blending) */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-80 dark:opacity-15 transition-opacity duration-300"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-80 dark:opacity-15 transition-opacity duration-300"
         style={{
           backgroundImage: "url('/assets/editorial/mountain-bg.png')",
-          backgroundAttachment: "fixed",
         }}
       />
 

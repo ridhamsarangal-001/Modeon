@@ -8,9 +8,9 @@ export default function AboutPage() {
   const breadcrumbs = [{ label: "About" }];
 
   return (
-    <div className="bg-[#F5F3EF] min-h-screen text-black select-none">
+    <div className="bg-[#F5F3EF] [.dark_&]:bg-[#121212] min-h-screen text-primary select-none transition-colors duration-300">
       {/* Breadcrumbs path */}
-      <div className="border-b border-neutral-200/50 py-1">
+      <div className="border-b border-border/40 py-1">
         <Breadcrumbs items={breadcrumbs} />
       </div>
 
@@ -18,13 +18,13 @@ export default function AboutPage() {
         
         {/* Core Header */}
         <div className="flex flex-col items-start gap-space-2 max-w-2xl">
-          <span className="font-sans text-micro tracking-widest uppercase text-neutral-500 font-semibold">
+          <span className="font-sans text-micro tracking-widest uppercase text-muted font-semibold">
             Our Story
           </span>
-          <h1 className="font-display text-display leading-tight font-normal text-neutral-900">
+          <h1 className="font-display text-display leading-tight font-normal text-primary">
             Considered Pieces, Quietly Made
           </h1>
-          <p className="font-sans text-body text-neutral-600 leading-relaxed mt-space-2">
+          <p className="font-sans text-body text-muted leading-relaxed mt-space-2">
             Modeon was founded on the belief that everyday clothing should be a quiet statement of character. We build garments that balance form and utility, crafted from the highest grade natural fibers.
           </p>
         </div>
@@ -36,14 +36,14 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="lg:col-span-6 relative aspect-4/5 md:aspect-3/2 lg:aspect-4/5 overflow-hidden bg-neutral-100"
+            className="lg:col-span-6 relative aspect-4/5 md:aspect-3/2 lg:aspect-4/5 overflow-hidden bg-neutral-100 [.dark_&]:bg-neutral-900"
           >
             <Image
               src="/assets/collections/essentials.jpg"
               alt="About Campaign visual"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover object-center"
+              className="object-cover object-top"
               unoptimized
             />
           </motion.div>
@@ -55,13 +55,13 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.15 }}
             className="lg:col-span-6 flex flex-col items-start gap-space-4 lg:pl-space-5"
           >
-            <h2 className="font-display text-h1 md:text-[36px] font-normal leading-tight text-neutral-900">
+            <h2 className="font-display text-h1 md:text-[36px] font-normal leading-tight text-primary">
               The Aesthetic of Silence
             </h2>
-            <p className="font-sans text-body leading-relaxed text-neutral-600">
+            <p className="font-sans text-body leading-relaxed text-muted">
               We design with restraint. By removing loud branding and superficial details, the focus is returned to the line, the structure, and the absolute quality of the fabric. Every shirt, trouser, and jacket is an edit of essentials, engineered to serve you daily.
             </p>
-            <p className="font-sans text-body leading-relaxed text-neutral-600">
+            <p className="font-sans text-body leading-relaxed text-muted">
               Our color palette is strictly curated in stone, clay, olive, charcoal, beige, and warm neutrals, ensuring every seasonal capsule integrates seamlessly into previous releases.
             </p>
           </motion.div>
@@ -73,14 +73,14 @@ export default function AboutPage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="w-full relative aspect-16/9 md:aspect-21/9 lg:aspect-[2.5/1] bg-neutral-200 overflow-hidden"
+          className="w-full relative aspect-16/9 md:aspect-21/9 lg:aspect-[2.5/1] bg-neutral-200 [.dark_&]:bg-neutral-900 overflow-hidden"
         >
           <Image
             src="/assets/hero/hero-2.jpg"
             alt="Atelier Campaign Lookbook Portrait"
             fill
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-top"
             unoptimized
           />
         </motion.div>
@@ -94,13 +94,13 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="lg:col-span-6 flex flex-col items-start gap-space-4 lg:pr-space-5 order-2 lg:order-1"
           >
-            <h2 className="font-display text-h1 md:text-[36px] font-normal leading-tight text-neutral-900">
+            <h2 className="font-display text-h1 md:text-[36px] font-normal leading-tight text-primary">
               Honoring Material Integrity
             </h2>
-            <p className="font-sans text-body leading-relaxed text-neutral-600">
+            <p className="font-sans text-body leading-relaxed text-muted">
               We source only natural fibers—organic linen, silk, merino wool, and pure cashmere. Our partners are boutique mills that honor heritage weaving techniques, ensuring that every garment has a distinct hand-feel and falls elegantly on the body.
             </p>
-            <p className="font-sans text-body leading-relaxed text-neutral-600">
+            <p className="font-sans text-body leading-relaxed text-muted">
               Designed in-house, we release small capsule edits rather than massive collections, minimizing environmental waste and prioritizing durability above fast fashion trends.
             </p>
           </motion.div>
@@ -110,14 +110,14 @@ export default function AboutPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.15 }}
-            className="lg:col-span-6 relative aspect-4/5 md:aspect-3/2 lg:aspect-4/5 overflow-hidden bg-neutral-100 order-1 lg:order-2"
+            className="lg:col-span-6 relative aspect-4/5 md:aspect-3/2 lg:aspect-4/5 overflow-hidden bg-neutral-100 [.dark_&]:bg-neutral-900 order-1 lg:order-2"
           >
             <Image
               src="/assets/collections/signature.jpg"
               alt="Tailoring details"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover object-center"
+              className="object-cover object-top"
               unoptimized
             />
           </motion.div>
