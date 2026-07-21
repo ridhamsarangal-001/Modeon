@@ -7,7 +7,10 @@ export async function middleware(request: NextRequest) {
   const { supabaseResponse, user } = await updateSession(request);
 
   const isLoggedIn = !!user;
-  const isAuthRoute = path === "/login" || path === "/signup";
+  const isAuthRoute =
+    path === "/login" ||
+    path === "/signup" ||
+    path === "/forgot-password";
   const isProtectedRoute =
     path.startsWith("/account") ||
     path.startsWith("/checkout") ||
@@ -33,6 +36,7 @@ export const config = {
   matcher: [
     "/login",
     "/signup",
+    "/forgot-password",
     "/account/:path*",
     "/checkout/:path*",
     "/admin/:path*",
